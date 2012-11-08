@@ -7,7 +7,8 @@ class winntp (
   include 'registry'
 
   service { 'w32time':
-    ensure => 'running',
+    enable  => true,
+    ensure  => 'running',
   }
 
   # Info on these settings at http://technet.microsoft.com/en-us/library/cc773263(v=ws.10).aspx
