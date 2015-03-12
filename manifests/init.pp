@@ -2,7 +2,8 @@ class winntp (
   $special_poll_interval    = 900, # 15 minutes
   $ntp_server               = 'north-america.pool.ntp.org,time.windows.com',
   $max_pos_phase_correction = '0xFFFFFFFF', # unlimited
-  $max_neg_phase_correction = '0xFFFFFFFF') {
+  $max_neg_phase_correction = '0xFFFFFFFF',
+  $run_server = true) {
     
   include 'registry'
 
@@ -20,10 +21,14 @@ class winntp (
     notify => Service['w32time'],
   }
 
+  $serve_mode = $run_server ? {
+    true => '5',
+    false => '0'
+  }
   registry_value { 'HKLM\SYSTEM\CurrentControlSet\Services\W32Time\Config\AnnounceFlags':
     ensure => present,
     type   => 'dword',
-    data   => '5',
+    data   => $serve_mode,
     notify => Service['w32time'],
   }
 
@@ -63,3 +68,5 @@ class winntp (
   }
 
 }
+
+dependency 'puppetlabs/registry', '>= 1.0.0'
